@@ -56,6 +56,7 @@ Stm             ::= id "=" Exp                                  |
                     "if" CExp "then" Body ["else" Body] "endif" |
                     "while" CExp "do" Body "endwhile"           |
                     "return" "(" [Exp] ")"                      |
+                    "for" id "in" "(" Exp "," Exp ")" "do" Body "endfor" |
 Exp             ::= BExp
 BExp            ::= CExp (("and" | "or") BExp)?
 CExp            ::= AExp (("==" | "<" | "<=" ) AExp)?
