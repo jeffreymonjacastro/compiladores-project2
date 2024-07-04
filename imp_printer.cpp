@@ -133,6 +133,20 @@ void ImpPrinter::visit(ReturnStatement *s) {
   return;
 }
 
+void ImpPrinter::visit(ForDoStatement *s) {
+  cout << "for (";
+  s->e1->accept(this);
+  cout << ", ";
+  s->e2->accept(this);
+  cout << ") do" << endl;
+  indent++;
+  s->body->accept(this);
+  indent--;
+  cout << setw(indent * 2) << "" << flush;
+  cout << "endfor";
+  return;
+}
+
 // Expresiones
 
 int ImpPrinter::visit(BinaryExp *e) {

@@ -339,6 +339,7 @@ StatementList *Parser::parseStatementList() {
 Stm *Parser::parseStatement() {
   Stm *s = NULL;
   Exp *e = NULL;
+  Exp *e1, *e2 = NULL;
   Body *tb, *fb;
   if (match(Token::ID)) {
     string lex = previous->lexema;
@@ -388,6 +389,27 @@ Stm *Parser::parseStatement() {
       parserError("Esperaba 'rparen'");
     s = new ReturnStatement(e);
 
+  } else if (match(Token::FOR)) {
+    // for id in (exp1, exp2) do body endfor
+    if (!match(Token::ID))
+      parserError("Esperaba id en for");
+    string id = previous->lexema;
+    if (!match(Token::IN))
+      parserError("Esperaba in en for");
+    if (!match(Token::LPAREN))
+      parserError("Esperaba lparen en for");
+    e1 = parseCExp();
+    if (!match(Token::COMMA))
+      parserError("Esperaba comma en for");
+    e2 = parseCExp();
+    if (!match(Token::RPAREN))
+      parserError("Esperaba rparen en for");
+    if (!match(Token::DO))
+      parserError("Esperaba do en for");
+    tb = parseBody();
+    if (!match(Token::ENDFOR))
+      parserError("Esperaba endfor en for");
+    s = new ForDoStatement(id, e1, e2, tb);
   } else {
     cout << "No se encontro Statement" << endl;
     exit(0);
