@@ -1,17 +1,17 @@
 #ifndef IMP_CODEGEN
 #define IMP_CODEGEN
 
-#include <sstream>
-#include <iostream>
-#include <stdlib.h>
 #include <cstring>
-#include <string>
 #include <fstream>
+#include <iostream>
+#include <sstream>
+#include <stdlib.h>
+#include <string>
 
-#include "imp.hh"
-#include "imp_visitor.hh"
 #include "environment.hh"
+#include "imp.hh"
 #include "imp_typechecker.hh"
+#include "imp_visitor.hh"
 
 class VarEntry {
 public:
@@ -21,38 +21,38 @@ public:
 
 class ImpCodeGen : public ImpVisitor {
 public:
-  ImpCodeGen(ImpTypeChecker*);
-  void codegen(Program*, string outfname);
-  void visit(Program*);
-  void visit(Body*);
-  void visit(VarDecList*);
-  void visit(VarDec*);
-  void visit(FunDecList*);
-  void visit(FunDec*);  
-  void visit(StatementList*);
-  void visit(AssignStatement*);
-  void visit(PrintStatement*);
-  void visit(IfStatement*);
-  void visit(WhileStatement*);
-  void visit(ReturnStatement*);
+  ImpCodeGen(ImpTypeChecker *);
+  void codegen(Program *, string outfname);
+  void visit(Program *);
+  void visit(Body *);
+  void visit(VarDecList *);
+  void visit(VarDec *);
+  void visit(FunDecList *);
+  void visit(FunDec *);
+  void visit(StatementList *);
+  void visit(AssignStatement *);
+  void visit(PrintStatement *);
+  void visit(IfStatement *);
+  void visit(WhileStatement *);
+  void visit(ReturnStatement *);
+  void visit(ForDoStatement *);
 
-  
-  int visit(BinaryExp* e);
-  int visit(NumberExp* e);
-  int visit(TrueFalseExp* e);
-  int visit(IdExp* e);
-  int visit(ParenthExp* e);
-  int visit(CondExp* e);
-  int visit(FCallExp* e);
+  int visit(BinaryExp *e);
+  int visit(NumberExp *e);
+  int visit(TrueFalseExp *e);
+  int visit(IdExp *e);
+  int visit(ParenthExp *e);
+  int visit(CondExp *e);
+  int visit(FCallExp *e);
 
 private:
-  ImpTypeChecker* analysis;
+  ImpTypeChecker *analysis;
   std::ostringstream code;
   string nolabel;
   int current_label;
-  
+
   Environment<VarEntry> direcciones;
-  
+
   int current_dir;
   int max_stack, mem_locals, mem_globals;
   bool process_global;
@@ -64,6 +64,4 @@ private:
   string get_flabel(string fname);
 };
 
-
 #endif
-
