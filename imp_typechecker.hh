@@ -34,8 +34,8 @@ private:
   vector<string> fnames;
   int sp, max_sp;
   int dir, max_dir;
-  void sp_decr(int n);
-  void sp_incr(int n);
+  void sp_decr();
+  void sp_incr();
 
 public:
   void typecheck(Program *);

@@ -1,0 +1,16 @@
+var int a, b;
+
+fun int foo(int x)
+  var bool z;
+  print(1);
+  return (x)
+endfun
+
+
+fun void main()
+  var int y;
+  print(10);
+  y = foo(4);
+  print(y);
+  return ()
+endfun

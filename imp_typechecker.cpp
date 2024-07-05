@@ -11,18 +11,21 @@ ImpTypeChecker::ImpTypeChecker()
 }
 
 // Metodos usados para el analsis de altura maxima de pila
-void ImpTypeChecker::sp_incr(int n) {
+void ImpTypeChecker::sp_incr() {
   sp++;
   if (sp > max_sp)
     max_sp = sp;
+  cout << "Increment: " << sp << endl;
 }
 
-void ImpTypeChecker::sp_decr(int n) {
+void ImpTypeChecker::sp_decr() {
   sp--;
   if (sp < 0) {
     cout << "stack less than 0" << endl;
     exit(0);
   }
+
+  cout << "Decrement: " << sp << endl;
 }
 
 void ImpTypeChecker::typecheck(Program *p) {
@@ -65,11 +68,15 @@ void ImpTypeChecker::visit(Program *p) {
 void ImpTypeChecker::visit(Body *b) {
   // guardar direccion actual (dir)
 
+  int current_dir = dir;
+
   env.add_level();
   b->var_decs->accept(this);
   b->slist->accept(this);
   env.remove_level();
   // restaurar direccion de entrada
+
+  dir = current_dir;
 
   return;
 }
@@ -128,6 +135,8 @@ void ImpTypeChecker::visit(VarDec *vd) {
   for (it = vd->vars.begin(); it != vd->vars.end(); ++it) {
     env.add_var(*it, type);
     // actualizar dir y max_dir
+    dir++;
+    max_dir++;
   }
   return;
 }
@@ -164,6 +173,7 @@ void ImpTypeChecker::visit(AssignStatement *s) {
     exit(0);
   }
   // que hacer con sp?
+  sp_decr();
   ImpType var_type = env.lookup(s->id);
   if (!type.match(var_type)) {
     cout << "Tipo incorrecto en Assign a " << s->id << endl;
@@ -175,6 +185,7 @@ void ImpTypeChecker::visit(AssignStatement *s) {
 void ImpTypeChecker::visit(PrintStatement *s) {
   s->e->accept(this);
   // que hacer con sp?
+  sp_decr();
   return;
 }
 
@@ -184,6 +195,7 @@ void ImpTypeChecker::visit(IfStatement *s) {
     exit(0);
   }
   // que hacer con sp?
+  sp_decr();
   s->tbody->accept(this);
   if (s->fbody != NULL)
     s->fbody->accept(this);
@@ -196,6 +208,7 @@ void ImpTypeChecker::visit(WhileStatement *s) {
     exit(0);
   }
   // que hacer con sp?
+  sp_decr();
   s->body->accept(this);
   return;
 }
@@ -203,10 +216,11 @@ void ImpTypeChecker::visit(WhileStatement *s) {
 void ImpTypeChecker::visit(ReturnStatement *s) {
   ImpType rtype = env.lookup("return");
   ImpType etype;
-  if (s->e != NULL)
+  if (s->e != NULL) {
     etype = s->e->accept(this);
-  // que hacer con sp?
-  else
+    // que hacer con sp?
+    sp_decr();
+  } else
     etype = voidtype;
   if (!rtype.match(etype)) {
     cout << "Return type mismatch: " << rtype << "<->" << etype << endl;
@@ -216,12 +230,19 @@ void ImpTypeChecker::visit(ReturnStatement *s) {
 }
 
 void ImpTypeChecker::visit(ForDoStatement *s) {
-  if (!s->e1->accept(this).match(inttype) &&
+  if (!s->e1->accept(this).match(inttype) ||
       !s->e2->accept(this).match(inttype)) {
     cout << "Expresiones en for deben de ser int" << endl;
-    // que hacer con sp?
     exit(0);
   }
+
+  // Si la variable del for no está en el environment, se agrega una dir más
+  if (!env.check(s->id)) {
+    dir++;
+    max_dir++;
+  }
+
+  sp_decr();
 }
 
 ImpType ImpTypeChecker::visit(BinaryExp *e) {
@@ -247,21 +268,25 @@ ImpType ImpTypeChecker::visit(BinaryExp *e) {
     break;
   }
   // que hacer con sp?
+  sp_decr();
   return result;
 }
 
 ImpType ImpTypeChecker::visit(NumberExp *e) {
   // que hacer con sp?
+  sp_incr();
   return inttype;
 }
 
 ImpType ImpTypeChecker::visit(TrueFalseExp *e) {
   // que hacer con sp?
+  sp_incr();
   return booltype;
 }
 
 ImpType ImpTypeChecker::visit(IdExp *e) {
   // que hacer con sp?
+  sp_incr();
   if (env.check(e->id))
     return env.lookup(e->id);
   else {
@@ -278,8 +303,10 @@ ImpType ImpTypeChecker::visit(CondExp *e) {
     exit(0);
   }
   // que hacer con sp?
+  sp_decr();
   ImpType ttype = e->etrue->accept(this);
   // que hacer con sp?
+  sp_decr();
   if (!ttype.match(e->efalse->accept(this))) {
     cout << "Tipos en ifexp deben de ser iguales" << endl;
     exit(0);

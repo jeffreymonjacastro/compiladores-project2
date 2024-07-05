@@ -144,9 +144,7 @@ void ImpInterpreter::visit(ForDoStatement *e) {
   ImpValue v2 = e->e2->accept(this);
 
   if (v1.type != TINT || v2.type != TINT) {
-    cout << "Error de tipos: operandos en operacion binaria tienen que ser "
-            "enteros"
-         << endl;
+    cout << "Error de tipos: tienen que ser enteros" << endl;
     exit(0);
   }
 
