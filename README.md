@@ -43,20 +43,20 @@ La gramática que se utilizó en el proyecto es la siguiente:
 ```js
 Program         ::= VarDecList FunDecList
 VarDecList      ::= (VarDec)* 
-FunDecList			::= (FunDec)+
-FunDec 					::= "fun" Type id "(" [ParamDecList] ")" Body "endfun"
+FunDecList      ::= (FunDec)+
+FunDec          ::= "fun" Type id "(" [ParamDecList] ")" Body "endfun"
 Body            ::= VarDecList StatementList  
 ParamDecList 		::= Type id ("," Type id)*
 VarDec          ::= "var" Type VarList ";"
 VarList         ::= id ("," id)*
 Type            ::= id
 StatementList   ::= Stm (";" Stm)*
-Stm             ::= id "=" Exp                                  |
-                    "print" "(" CExp ")"                        |
-                    "if" CExp "then" Body ["else" Body] "endif" |
-                    "while" CExp "do" Body "endwhile"           |
-                    "return" "(" [Exp] ")"                      |
-                    "for" id "in" "(" Exp "," Exp ")" "do" Body "endfor" |
+Stm             ::= id "=" Exp                                            |
+                    "print" "(" CExp ")"                                  |
+                    "if" CExp "then" Body ["else" Body] "endif"           |
+                    "while" CExp "do" Body "endwhile"                     |
+                    "return" "(" [Exp] ")"                                |
+                    "for" id "in" "(" Exp "," Exp ")" "do" Body "endfor"  |
 Exp             ::= BExp
 BExp            ::= CExp (("and" | "or") BExp)?
 CExp            ::= AExp (("==" | "<" | "<=" ) AExp)?
@@ -86,9 +86,51 @@ En esta sección se describe la implementación del Typechecker y Codegen para e
 
 #### Implementación del Codegen
 
-### Ejemplo de uso
+### 1.3. Ejemplo de uso
 
-### Consideraciones finales
+### 1.4. Consideraciones finales
+
+> **⚠️ Reporte: ¿Cómo se calculó el espacio requerido para las variables locales y la altura máxima de pila para las funciones? ¿Cómo se calculó las direcciones de las variables globales y locales, así como la posición en la pila del valor de retorno?** 
+
+## 2. Implementación de FCallStm
+
+### 1.1. Cambios en el Scanner
+
+### 1.2. Cambios en el Parser
+
+### 1.3. Printer
+
+### 1.4. Interpreter
+
+### 1.5. Typechecker
+
+### 1.6. Codegen
+
+### 1.7. Ejemplo de funcionamiento
+
+### 1.8. Consideraciones finales
+
+> **⚠️ Reporte: Indicar los cambios al programa (parser, typechecker, codegen, etc) y las definiciones de typecheck y codegen.**
+
+## 3. Implementación de ForDoStm
+
+### 1.1. Cambios en el Scanner
+
+### 1.2. Cambios en el Parser
+
+### 1.3. Printer
+
+### 1.4. Interpreter
+
+### 1.5. Typechecker
+
+### 1.6. Codegen
+
+### 1.7. Ejemplo de funcionamiento
+
+### 1.8. Consideraciones finales
+
+> **⚠️ Reporte: Indicar los cambios al programa (parser, typechecker, codegen, etc) y las definiciones de typecheck y codegen.**
 
 
 ## Autores
