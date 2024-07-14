@@ -23,6 +23,7 @@ public:
   void visit(WhileStatement *);
   void visit(ReturnStatement *);
   void visit(ForDoStatement *);
+  void visit(FCallStm *);
 
   int visit(BinaryExp *e);
   int visit(NumberExp *e);

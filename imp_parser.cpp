@@ -341,14 +341,28 @@ Stm *Parser::parseStatement() {
   Exp *e = NULL;
   Exp *e1, *e2 = NULL;
   Body *tb, *fb;
+
   if (match(Token::ID)) {
     string lex = previous->lexema;
-    if (!match(Token::ASSIGN)) {
-      cout << "Error: esperaba =" << endl;
-      exit(0);
+    // function stm
+    if (match(Token::LPAREN)) {
+      list<Exp *> args;
+      if (!check(Token::RPAREN)) {
+        args.push_back(parseCExp());
+        while (match(Token::COMMA)) {
+          args.push_back(parseCExp());
+        }
+      }
+      if (!match(Token::RPAREN))
+        parserError("Expecting rparen");
+      return new FCallStm(lex, args);
+    } else {
+      if (!match(Token::ASSIGN)) {
+        cout << "Error: esperaba =" << endl;
+        exit(0);
+      }
+      s = new AssignStatement(lex, parseCExp());
     }
-    s = new AssignStatement(lex, parseCExp());
-    // memoria_update(lex, v);
   } else if (match(Token::PRINT)) {
     if (!match(Token::LPAREN)) {
       cout << "Error: esperaba ( " << endl;

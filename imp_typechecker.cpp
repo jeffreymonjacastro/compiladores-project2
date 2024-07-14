@@ -15,7 +15,6 @@ void ImpTypeChecker::sp_incr() {
   sp++;
   if (sp > max_sp)
     max_sp = sp;
-  cout << "Increment: " << sp << endl;
 }
 
 void ImpTypeChecker::sp_decr() {
@@ -24,8 +23,6 @@ void ImpTypeChecker::sp_decr() {
     cout << "stack less than 0" << endl;
     exit(0);
   }
-
-  cout << "Decrement: " << sp << endl;
 }
 
 void ImpTypeChecker::typecheck(Program *p) {
@@ -238,11 +235,53 @@ void ImpTypeChecker::visit(ForDoStatement *s) {
 
   // Si la variable del for no está en el environment, se agrega una dir más
   if (!env.check(s->id)) {
+    env.add_var(s->id, inttype);
     dir++;
     max_dir++;
   }
 
   sp_decr();
+}
+
+void ImpTypeChecker::visit(FCallStm *s) {
+  // verificar que fname esta definido
+  if (!env.check(s->fname)) {
+    cout << "(Function call): " << s->fname << " no existe" << endl;
+    exit(0);
+  }
+  ImpType funtype = env.lookup(s->fname);
+  if (funtype.ttype != ImpType::FUN) {
+    cout << "(Function call): " << s->fname << " no es una funcion" << endl;
+    exit(0);
+  }
+
+  sp_incr();
+
+  // Verificar que el número de argumentos es el mismo que el número de
+  ImpType tipo_funcion = env.lookup(s->fname);
+  if (tipo_funcion.types.size() - 1 != s->args.size()) {
+    cout << "El numero de argumentos no coincide con el numero de parametros"
+         << endl;
+    exit(0);
+  }
+
+  int count = 0;
+  list<Exp *>::iterator it;
+  for (it = s->args.begin(); it != s->args.end(); ++it) {
+    ImpType argtype = (*it)->accept(this);
+    ImpType funcparam;
+    funcparam.set_basic_type(tipo_funcion.types[count]);
+
+    if (!argtype.match(funcparam)) {
+      cout << "El tipo de los argumentos no coincide con los parametros"
+           << endl;
+      exit(0);
+    }
+
+    count++;
+  }
+
+  return;
 }
 
 ImpType ImpTypeChecker::visit(BinaryExp *e) {
@@ -332,6 +371,7 @@ ImpType ImpTypeChecker::visit(FCallExp *e) {
   rtype.set_basic_type(funtype.types[num_fun_args]);
 
   // que hacer con sp y el valor de retorno?
+  sp_incr();
 
   if (num_fun_args != num_fcall_args) {
     cout << "(Function call) Numero de argumentos no corresponde a declaracion "

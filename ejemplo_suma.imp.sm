@@ -33,7 +33,7 @@ loadr 1
 storer -4
 return 4
 Lmain: skip
-enter 2
+enter 3
 alloc 1
 push  10
 store 1

@@ -46,14 +46,14 @@ VarDecList      ::= (VarDec)*
 FunDecList      ::= (FunDec)+
 FunDec          ::= "fun" Type id "(" [ParamDecList] ")" Body "endfun"
 Body            ::= VarDecList StatementList  
-ParamDecList 		::= Type id ("," Type id)*
+ParamDecList    ::= Type id ("," Type id)*
 VarDec          ::= "var" Type VarList ";"
 VarList         ::= id ("," id)*
 Type            ::= id
 StatementList   ::= Stm (";" Stm)*
 Stm             ::= id "=" Exp                                            |
                     "print" "(" CExp ")"                                  |
-                    "if" CExp "then" Body ["else" Body] "endif"           |
+                    "if" CExp "then" Body ["else" Body] "endif"           |   
                     "while" CExp "do" Body "endwhile"                     |
                     "return" "(" [Exp] ")"                                |
                     "for" id "in" "(" Exp "," Exp ")" "do" Body "endfor"  |
@@ -62,16 +62,15 @@ BExp            ::= CExp (("and" | "or") BExp)?
 CExp            ::= AExp (("==" | "<" | "<=" ) AExp)?
 AExp            ::= Term (("+" | "-") Term)*
 Term            ::= FExp (("*" | "/") FExp)*
-FExp            ::= Unary ("**" FExp)?
-Unary           ::= "-" Factor | "!" Factor | Factor
+FExp            ::= Factor ("**" FExp)? | Factor
 Factor          ::= id                                       	| 
                     num                                      	| 
                     true                                     	|
                     false                                    	|
                     "(" Exp ")"                              	| 
                     "ifexp" "(" Exp "," Exp "," Exp ")"      	|
-										id "(" [ArgList] ")"
-ArgList				  ::= Exp ("," Exp)*
+                    id "(" [ArgList] ")"
+ArgList         ::= Exp ("," Exp)*
 ```
 
 ## 1. Typechecker y Codegen

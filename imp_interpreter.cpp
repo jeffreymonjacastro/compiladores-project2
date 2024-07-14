@@ -142,6 +142,8 @@ void ImpInterpreter::visit(ReturnStatement *s) {
 void ImpInterpreter::visit(ForDoStatement *e) {
   ImpValue v1 = e->e1->accept(this);
   ImpValue v2 = e->e2->accept(this);
+  ImpValue vi;
+  ImpValue vold;
 
   if (v1.type != TINT || v2.type != TINT) {
     cout << "Error de tipos: tienen que ser enteros" << endl;
@@ -151,9 +153,54 @@ void ImpInterpreter::visit(ForDoStatement *e) {
   int iv1 = v1.int_value;
   int iv2 = v2.int_value;
 
+  bool flag = false;
+
+  vi.set_default_value(TINT);
+
+  if (!env.check(e->id)) {
+    env.add_var(e->id, vi);
+  } else {
+    flag = true;
+    vold = env.lookup(e->id);
+  }
+
   for (int i = iv1; i < iv2; i++) {
+    vi.int_value = i;
+    env.update(e->id, vi);
     e->body->accept(this);
   }
+
+  if (flag) {
+    env.update(e->id, vold);
+  }
+}
+
+void ImpInterpreter::visit(FCallStm *s) {
+  FunDec *fdec = fdecs.lookup(s->fname);
+  env.add_level();
+  list<Exp *>::iterator it;
+  list<string>::iterator varit;
+  list<string>::iterator vartype;
+  ImpVType tt;
+
+  for (it = s->args.begin(), varit = fdec->vars.begin(),
+      vartype = fdec->types.begin();
+       it != s->args.end(); ++it, ++varit, ++vartype) {
+    tt = ImpValue::get_basic_type(*vartype);
+    ImpValue v = (*it)->accept(this);
+    env.add_var(*varit, v);
+  }
+  retcall = false;
+  fdec->body->accept(this);
+
+  if (!retcall) {
+    cout << "Error: Funcion " << s->fname << " no ejecuto RETURN" << endl;
+    exit(0);
+  }
+
+  retcall = false;
+  env.remove_level();
+  return;
 }
 
 // Expressions

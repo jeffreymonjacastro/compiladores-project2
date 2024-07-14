@@ -19,6 +19,7 @@ public:
   virtual void visit(WhileStatement *e) = 0;
   virtual void visit(ReturnStatement *e) = 0;
   virtual void visit(ForDoStatement *e) = 0;
+  virtual void visit(FCallStm *e) = 0;
 
   virtual ImpType visit(BinaryExp *e) = 0;
   virtual ImpType visit(NumberExp *e) = 0;

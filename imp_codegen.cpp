@@ -225,20 +225,44 @@ void ImpCodeGen::visit(ReturnStatement *s) {
 
 // Completar
 void ImpCodeGen::visit(ForDoStatement *s) {
-  // s->e1->accept(this);
+  string l1 = next_label();
+  string l2 = next_label();
 
-  // // Si el id del for no está en las direcciones
-  // if (!direcciones.check(s->id)){
-  //   VarEntry ventry;
-  //   ventry.dir = current_dir;
-  //   ventry.is_global = process_global;
-  //   direcciones.add_var(s->id, ventry);
-  // } else {
+  VarEntry ventry = direcciones.lookup(s->id);
 
-  // }
+  s->e1->accept(this);
+  codegen(nolabel, "storer", ventry.dir);
+  codegen(l1, "skip");
+  codegen(nolabel, "loadr", ventry.dir);
+  s->e2->accept(this);
+  codegen(nolabel, "lt");
+  codegen(nolabel, "jmpz", l2);
+  s->body->accept(this);
+  codegen(nolabel, "loadr", ventry.dir);
+  codegen(nolabel, "push", 1);
+  codegen(nolabel, "add");
+  codegen(nolabel, "storer", ventry.dir);
+  codegen(nolabel, "goto", l1);
+  codegen(l2, "skip");
 
-  // codegen(nolabel, "storer", 1);
+  return;
+}
 
+void ImpCodeGen::visit(FCallStm *s) {
+  FEntry fentry = analysis->ftable.lookup(s->fname);
+  ImpType ftype = fentry.ftype;
+
+  // agregar codigo
+  codegen(nolabel, "alloc", 1);
+
+  list<Exp *>::iterator it;
+  for (it = s->args.begin(); it != s->args.end(); ++it) {
+    (*it)->accept(this);
+  }
+
+  codegen(nolabel, "mark");
+  codegen(nolabel, "pusha", get_flabel(s->fname));
+  codegen(nolabel, "call");
   return;
 }
 

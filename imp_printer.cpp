@@ -134,7 +134,7 @@ void ImpPrinter::visit(ReturnStatement *s) {
 }
 
 void ImpPrinter::visit(ForDoStatement *s) {
-  cout << "for (";
+  cout << "for " << s->id << " in (";
   s->e1->accept(this);
   cout << ", ";
   s->e2->accept(this);
@@ -144,6 +144,20 @@ void ImpPrinter::visit(ForDoStatement *s) {
   indent--;
   cout << setw(indent * 2) << "" << flush;
   cout << "endfor";
+  return;
+}
+
+void ImpPrinter::visit(FCallStm *s) {
+  cout << s->fname << "(";
+  list<Exp *>::iterator it;
+  bool first = true;
+  for (it = s->args.begin(); it != s->args.end(); ++it) {
+    if (!first)
+      cout << ",";
+    first = false;
+    (*it)->accept(this);
+  }
+  cout << ")";
   return;
 }
 

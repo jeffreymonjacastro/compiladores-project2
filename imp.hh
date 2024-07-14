@@ -177,6 +177,17 @@ public:
   ~ForDoStatement();
 };
 
+class FCallStm : public Stm {
+public:
+  string fname;
+  list<Exp *> args;
+  FCallStm(string fname, list<Exp *> args);
+  void accept(ImpVisitor *v);
+  void accept(ImpValueVisitor *v);
+  void accept(TypeVisitor *v);
+  ~FCallStm();
+};
+
 class StatementList {
 public:
   list<Stm *> slist;

@@ -1,29 +1,36 @@
 start: skip
-enter 2
-alloc 2
+enter 1
+alloc 1
 mark
 pusha Lmain
 call
 halt
-Lfoo: skip
-enter 2
-alloc 1
-push  1
-print
-loadr -3
-storer -4
-return 4
 Lmain: skip
-enter 2
-alloc 1
-push  10
+enter 3
+alloc 0
+push  20
+store 1
+load 1
 print
-alloc 1
-push  4
-mark
-pusha Lfoo
-call
+push  1
+push  3
+add
 storer 1
+L0: skip
 loadr 1
+push  4
+push  4
+add
+lt
+jmpz L1
+load 1
+print
+loadr 1
+push 1
+add
+storer 1
+goto L0
+L1: skip
+load 1
 print
 return 3
