@@ -167,8 +167,6 @@ void ImpCodeGen::visit(AssignStatement *s) {
   else
     codegen(nolabel, "storer", ventry.dir);
 
-  // modificar 100 global vs local
-
   return;
 }
 
