@@ -13,6 +13,29 @@ En este proyecto se implementaron mejoras al compilador del lenguaje IMP-FUN que
 - [Projecto 2 - (Compiladores CS3025)](#projecto-2---compiladores-cs3025)
   - [Resumen](#resumen)
   - [Tabla de Contenidos](#tabla-de-contenidos)
+  - [Gramática del lenguaje IMP-FUN](#gramática-del-lenguaje-imp-fun)
+  - [1. Typechecker y Codegen](#1-typechecker-y-codegen)
+    - [1.1. Typechecker para funciones](#11-typechecker-para-funciones)
+    - [1.2. Codegen para funciones](#12-codegen-para-funciones)
+    - [1.3. Ejemplo de uso](#13-ejemplo-de-uso)
+  - [2. Implementación de FCallStm](#2-implementación-de-fcallstm)
+    - [1.1. Cambios en el Parser](#11-cambios-en-el-parser-1)
+    - [1.2. Printer](#12-printer)
+    - [1.3. Interpreter](#13-interpreter)
+    - [1.4. Typechecker](#14-typechecker)
+    - [1.5. Codegen](#15-codegen)
+    - [1.6. Ejemplo de funcionamiento](#16-ejemplo-de-funcionamiento)
+  - [3. Implementación de ForDoStm](#3-implementación-de-fordostm)
+    - [1.1. Cambios en el Scanner](#11-cambios-en-el-scanner)
+    - [1.2. Cambios en el Parser](#12-cambios-en-el-parser)
+    - [1.3. Printer](#13-printer-1)
+    - [1.4. Interpreter](#14-interpreter-1)
+    - [1.5. Typechecker](#15-typechecker-1)
+    - [1.6. Codegen](#16-codegen-1)
+    - [1.7. Ejemplo de funcionamiento](#17-ejemplo-de-funcionamiento-1)
+  - [Autores](#autores)
+  - [Referencias](#referencias)
+  
 
 
 ## Gramática del lenguaje IMP-FUN
@@ -330,7 +353,7 @@ Stm *Parser::parseStatement() {
 }
 ```
 
-### 1.3. Printer
+### 1.2. Printer
 
 ```cpp
 void ImpPrinter::visit(FCallStm *s) {
@@ -348,7 +371,7 @@ void ImpPrinter::visit(FCallStm *s) {
 }
 ```
 
-### 1.4. Interpreter
+### 1.3. Interpreter
 
 ```cpp
 void ImpInterpreter::visit(FCallStm *s) {
@@ -380,7 +403,7 @@ void ImpInterpreter::visit(FCallStm *s) {
 }
 ```
 
-### 1.5. Typechecker
+### 1.4. Typechecker
 
 ```cpp
 void ImpTypeChecker::visit(FCallStm *s) {
@@ -419,7 +442,7 @@ void ImpTypeChecker::visit(FCallStm *s) {
 }
 ```
 
-### 1.6. Codegen
+### 1.5. Codegen
 
 ```cpp
 void ImpCodeGen::visit(FCallStm *s) {
@@ -440,7 +463,7 @@ void ImpCodeGen::visit(FCallStm *s) {
 }
 ```
 
-### 1.7. Ejemplo de funcionamiento
+### 1.6. Ejemplo de funcionamiento
 
 Para probar el código, se ejecutó el programa `ejemplo_fcallstm.imp`:
 
